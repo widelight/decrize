@@ -1,0 +1,135 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Node {
+private:
+	double value;
+	Node* next = new Node;
+public:
+	Node();
+	~Node();
+	void printNode();
+	double getValue();
+	void setValue(double value);
+	Node* getNext();
+	void setNext(Node* next);
+};
+
+class LinkedList {
+private:
+	Node* head = new Node;
+public:
+	LinkedList();
+	~LinkedList();
+	void insertNode(double value);
+	void insertNode(double value, int pos);
+	void deleteNode(int pos);
+	void deleteNode(double value);
+	void updateNode(double value, int pos);
+	void printLinkedList();
+};
+
+
+LinkedList::LinkedList() {
+	head = NULL;
+}
+LinkedList::~LinkedList() {
+	delete head;
+}
+void LinkedList::insertNode(double value) {
+	Node* temp = head;
+	while (temp != NULL) {
+		temp = temp->getNext();
+	}
+	temp->setValue(value);
+	temp->setNext(NULL);
+}
+void LinkedList::insertNode(double value, int pos) {
+	Node* temp = head;
+	Node* newNode = new Node();
+	for (int i = 1; i < pos - 1; i++) {
+		temp = temp->getNext();
+	}
+	newNode->setNext(temp->getNext());
+	newNode->setValue(value);
+	temp->setNext(newNode);
+}
+void LinkedList::deleteNode(int pos) {
+	Node* temp = new Node();
+	Node* delNode;
+	for (int i = 1; i < pos - 1; i++) {
+		temp = temp->getNext();
+	}
+	delNode = temp->getNext();
+	temp->setNext(delNode->getNext());
+	temp->~Node();
+}
+void LinkedList::deleteNode(double value) {
+	Node* finding = head->getNext();
+	Node* delNode = finding->getNext();
+	bool find = false;
+	for (; !find || finding != NULL; finding = finding->getNext(), delNode = finding->getNext()) {
+		if (delNode->getValue() == value) {
+			finding->setNext(delNode->getNext());
+			find = true;
+		}
+	}
+}
+void LinkedList::updateNode(double value, int pos) {
+	Node* temp = head;
+	for (int i = 0; i < pos; i++) {
+		temp = temp->getNext();
+	}
+	temp->setValue(value);
+}
+void LinkedList::printLinkedList() {
+	Node* cur = head;
+	while (cur != NULL) {
+		cout << cur->getValue() << "-->";
+		cur = cur->getNext();
+	}
+	cout << endl;
+}
+
+
+///////////////////////////////////////////////////////////
+Node::Node() {
+	value = NULL;
+	next = NULL;
+}
+Node::~Node() { delete next; }
+void Node::setValue(double value) { this->value = value; }
+
+Node* Node::getNext() {
+	return this->next;
+}
+void Node::printNode() {
+	cout << value;
+}
+double Node::getValue() {
+	return value;
+}
+void Node::setNext(Node* next) {
+	this->next = next;
+}
+
+int main() {
+	LinkedList* L = new LinkedList();
+	L->insertNode(100.1);
+	L->insertNode(200.2);
+	L->insertNode(300.3);
+	L->insertNode(500.5);
+	L->insertNode(400.4, 4);
+	L->deleteNode(300.3);
+	L->deleteNode(2);
+	L->deleteNode(1);
+	L->updateNode(202.1, 1);
+	L->insertNode(202.2, 2);
+	L->deleteNode(3);
+	L->printLinkedList();
+
+	L->~LinkedList();
+	delete L;
+}
